@@ -12,8 +12,8 @@ Built a stock market prediction application using Next.js and TypeScript. The pr
 
 ## Key Achievements
 
--Developed a time-series forecasting model using LSTMs & financial indicators for predicting stock trends.
--Achieved 7.8% MAPE, improving forecast accuracy by 15% through feature engineering, model fine-tuning, and hyperparameter optimization.
--Integrated an LLM-based financial sentiment analysis module to enhance stock predictions, increasing decision-making accuracy by 20%.
--Built a FastAPI-based backend with a React frontend, supporting 10,000+ API calls/month for real-time stock data processing and analytics.
+- Developed a time-series forecasting model using LSTMs & financial indicators for predicting stock trends.
+- Achieved 7.8% MAPE, improving forecast accuracy by 15% through feature engineering, model fine-tuning, and hyperparameter optimization.
+- Integrated an LLM-based financial sentiment analysis module to enhance stock predictions, increasing decision-making accuracy by 20%.
+- Built a FastAPI-based backend with a React frontend, supporting 10,000+ API calls/month for real-time stock data processing and analytics.
  
