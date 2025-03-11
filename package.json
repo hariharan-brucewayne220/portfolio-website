@@ -30,6 +30,7 @@
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "@types/styled-components": "^5.1.34",
+    "raw-loader": "^4.0.2",
     "typescript": "^5.3.3"
   }
 }
