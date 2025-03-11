@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoClose } from 'react-icons/io5'
 import type { ContentItem } from '../../lib/mdx'
+import ReactMarkdown from 'react-markdown'
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -113,6 +114,31 @@ const Tag = styled.span`
   text-transform: lowercase;
 `
 
+const MarkdownContent = styled.div`
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 2rem 0;
+
+  h1, h2, h3 {
+    color: var(--foreground);
+    margin: 1.5rem 0 1rem;
+  }
+
+  ul, ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin: 0.5rem 0;
+  }
+
+  p {
+    margin: 1rem 0;
+  }
+`
+
 interface ProjectModalProps {
   project: ContentItem | null
   onClose: () => void
@@ -155,9 +181,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </ProjectMeta>
             </ProjectHeader>
 
-            <ProjectDescription>
-              {project.description}
-            </ProjectDescription>
+            <MarkdownContent>
+              <ReactMarkdown>{project.content}</ReactMarkdown>
+            </MarkdownContent>
 
             <TagsContainer>
               {project.tags.map((tag: string) => (
