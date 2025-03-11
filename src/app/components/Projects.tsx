@@ -1,9 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import type { ContentItem } from '../../lib/mdx'
+import { ProjectModal } from '../projects/ProjectModal'
 
 const ProjectsGrid = styled.div`
   display: grid;
@@ -64,27 +65,37 @@ interface ProjectsProps {
 }
 
 export function Projects({ projects }: ProjectsProps) {
+  const [selectedProject, setSelectedProject] = useState<ContentItem | null>(null)
+
   return (
-    <ProjectsGrid>
-      {projects.map((project, index) => (
-        <ProjectCard
-          key={project.slug}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-        >
-          {project.image && <ProjectImage src={project.image} alt={project.title} />}
-          <ProjectContent>
-            <ProjectTitle>{project.title}</ProjectTitle>
-            <ProjectDescription>{project.description}</ProjectDescription>
-            <TagsContainer>
-              {project.tags.map((tag) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </TagsContainer>
-          </ProjectContent>
-        </ProjectCard>
-      ))}
-    </ProjectsGrid>
+    <>
+      <ProjectsGrid>
+        {projects.map((project, index) => (
+          <ProjectCard
+            key={project.slug}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            onClick={() => setSelectedProject(project)}
+          >
+            {project.image && <ProjectImage src={project.image} alt={project.title} />}
+            <ProjectContent>
+              <ProjectTitle>{project.title}</ProjectTitle>
+              <ProjectDescription>{project.description}</ProjectDescription>
+              <TagsContainer>
+                {project.tags.map((tag: string) => (
+                  <Tag key={tag}>{tag}</Tag>
+                ))}
+              </TagsContainer>
+            </ProjectContent>
+          </ProjectCard>
+        ))}
+      </ProjectsGrid>
+
+      <ProjectModal 
+        project={selectedProject} 
+        onClose={() => setSelectedProject(null)} 
+      />
+    </>
   )
 } 

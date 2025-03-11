@@ -3,7 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import type { ContentItem } from '../../api/content/route'
+import type { ContentItem } from '../../../lib/mdx'
 
 const ProjectCard = styled(motion.div)<{ $isEven: boolean }>`
   position: relative;
