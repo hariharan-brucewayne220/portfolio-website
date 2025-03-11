@@ -2,7 +2,7 @@
 title: 'AI-Powered Cancer Diagnosis'
 description: 'Vision Transformer (ViT) based medical image classification system with LLM-powered report summarization for efficient cancer detection.'
 date: '2025'
-tags: ['Vision Transformers', 'Generative AI', 'ML Pipeline', 'LLM']
+tags: [Vision-Transformers, Generative-AI, LLM]
 ---
 
 # AI-Powered Cancer Diagnosis

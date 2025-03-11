@@ -2,8 +2,8 @@
 title: 'Medical NER & Research Paper Summarization'
 description: 'Advanced Named Entity Recognition system using Hugging Face Transformers with LLM-based summarization for medical research papers.'
 date: '2024'
-image:"/projects/medner.jpg"
-tags: ['NLP', 'FastAPI','Machine Learning']
+tags: [Healthcare-AI, NLP,FastAPI]
+image: /projects/medner.jpg
 ---
 
 # Medical NER & Research Paper Summarization System

@@ -3,7 +3,7 @@ title: AI Stock Prediction
 date: 2024-02-15
 institution: Personal Project
 description: A Next.js web application that uses machine learning to predict stock market trends. Built with TypeScript and integrates with various financial APIs.
-tags: [software, ai]
+tags: [Finance-AI, Generative-AI,LLM]
 image: /projects/stockpred.jpg
 ---
 
