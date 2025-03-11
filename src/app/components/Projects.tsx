@@ -10,18 +10,20 @@ const ProjectsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  padding: 2rem 0;
+  margin-top: 2rem;
 `
 
 const ProjectCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 `
 
@@ -29,35 +31,44 @@ const ProjectImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
+  background: var(--background);
 `
 
-const ProjectContent = styled.div`
+const ProjectInfo = styled.div`
   padding: 1.5rem;
 `
 
 const ProjectTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 0;
+  font-size: 1.25rem;
   color: var(--foreground);
 `
 
-const ProjectDescription = styled.p`
+const ProjectMeta = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
   color: var(--muted);
-  margin-bottom: 1rem;
+`
+
+const ProjectDescription = styled.p`
+  margin: 1rem 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
 `
 
 const TagsContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
+  flex-wrap: wrap;
 `
 
 const Tag = styled.span`
-  background: var(--primary);
-  color: var(--background);
+  background: var(--tag-background);
+  color: var(--tag-foreground);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 `
 
 interface ProjectsProps {
@@ -66,6 +77,14 @@ interface ProjectsProps {
 
 export function Projects({ projects }: ProjectsProps) {
   const [selectedProject, setSelectedProject] = useState<ContentItem | null>(null)
+
+  if (!projects || projects.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', color: 'var(--muted)', padding: '2rem' }}>
+        No projects found.
+      </div>
+    )
+  }
 
   return (
     <>
@@ -78,16 +97,25 @@ export function Projects({ projects }: ProjectsProps) {
             transition={{ delay: index * 0.1 }}
             onClick={() => setSelectedProject(project)}
           >
-            {project.image && <ProjectImage src={project.image} alt={project.title} />}
-            <ProjectContent>
+            {project.image && (
+              <ProjectImage src={project.image} alt={project.title} />
+            )}
+            <ProjectInfo>
               <ProjectTitle>{project.title}</ProjectTitle>
+              <ProjectMeta>
+                {project.institution && `${project.institution} • `}
+                {new Date(project.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                })}
+              </ProjectMeta>
               <ProjectDescription>{project.description}</ProjectDescription>
               <TagsContainer>
-                {project.tags.map((tag: string) => (
+                {project.tags.map((tag) => (
                   <Tag key={tag}>{tag}</Tag>
                 ))}
               </TagsContainer>
-            </ProjectContent>
+            </ProjectInfo>
           </ProjectCard>
         ))}
       </ProjectsGrid>
