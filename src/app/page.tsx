@@ -180,13 +180,13 @@ export default function HomePage() {
           <SectionTitle>Education</SectionTitle>
           <Paragraph>
             <strong>Master of Science in Computer Science</strong><br />
-            University of Illinois Chicago<br />
-            2023 - Present
+            New York University<br />
+            2024 - Present
           </Paragraph>
           <Paragraph>
-            <strong>Bachelor of Engineering in Computer Science</strong><br />
-            Anna University<br />
-            2016 - 2020
+            <strong>Bachelor of Technology in Information Technology</strong><br />
+            Vellore Institute of Technology<br />
+            2017 - 2021
           </Paragraph>
         </Section>
 
