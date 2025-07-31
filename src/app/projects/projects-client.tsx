@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BsGrid, BsListUl } from 'react-icons/bs'
+import { useRouter } from 'next/navigation'
 import type { ContentItem } from '../../lib/mdx'
-import { ProjectModal } from './ProjectModal'
 
 // --- Styled Components ---
 const ProjectsContainer = styled.div`
@@ -232,7 +232,27 @@ const ProjectCardContent = ({ project, onSelect }: { project: ContentItem, onSel
 export default function ProjectsClient({ projects }: { projects: ContentItem[] }) {
   const [filter, setFilter] = useState<'all' | 'software' | 'ai'>('all')
   const [view, setView] = useState<'grid' | 'timeline'>('timeline')
-  const [selectedProject, setSelectedProject] = useState<ContentItem | null>(null)
+  const router = useRouter()
+
+  // Restore scroll position when navigating back
+  useEffect(() => {
+    const wasNavigatingBack = sessionStorage.getItem('navigatingBack')
+    const savedScrollPosition = sessionStorage.getItem('projectsScrollPosition')
+    
+    if (wasNavigatingBack && savedScrollPosition) {
+      const scrollY = parseInt(savedScrollPosition, 10)
+      window.scrollTo({ top: scrollY, behavior: 'smooth' })
+      sessionStorage.removeItem('navigatingBack')
+      sessionStorage.removeItem('projectsScrollPosition')
+    }
+  }, [])
+
+  // Save scroll position before navigating to project detail
+  const handleProjectClick = (projectSlug: string) => {
+    sessionStorage.setItem('projectsScrollPosition', window.scrollY.toString())
+    // Use window.location for now to ensure proper page load
+    window.location.href = `/projects/${projectSlug}`
+  }
 
   const filteredProjects = React.useMemo(() => 
     projects.filter(project => {
@@ -274,7 +294,10 @@ export default function ProjectsClient({ projects }: { projects: ContentItem[] }
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <ProjectCardContent project={project} onSelect={() => setSelectedProject(project)} />
+                <ProjectCardContent 
+                  project={project} 
+                  onSelect={() => handleProjectClick(project.slug)} 
+                />
               </TimelineProject>
             ))}
           </TimelineContainer>
@@ -292,17 +315,16 @@ export default function ProjectsClient({ projects }: { projects: ContentItem[] }
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <ProjectCardContent project={project} onSelect={() => setSelectedProject(project)} />
+                <ProjectCardContent 
+                  project={project} 
+                  onSelect={() => handleProjectClick(project.slug)} 
+                />
               </motion.div>
             ))}
           </ProjectGrid>
         )}
       </AnimatePresence>
 
-      <ProjectModal 
-        project={selectedProject} 
-        onClose={() => setSelectedProject(null)} 
-      />
     </ProjectsContainer>
   )
 }

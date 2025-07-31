@@ -11,26 +11,17 @@ const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
-  z-index: 1002;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  z-index: 9999;
   
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 0.5rem;
-  }
 `
 
-const Modal = styled(motion.div)`
+const Modal = styled(motion.div)<{ $clickX?: number; $clickY?: number }>`
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -38,15 +29,21 @@ const Modal = styled(motion.div)`
   max-width: 800px;
   max-height: 85vh;
   overflow-y: auto;
-  position: relative;
+  position: fixed;
+  top: ${props => props.$clickY ? `${props.$clickY}px` : '50%'};
+  left: ${props => props.$clickX ? `${props.$clickX}px` : '50%'};
+  transform: translate(-50%, -50%);
+  z-index: 10000;
   
   @media (max-width: 768px) {
     max-height: 90vh;
     border-radius: 8px;
+    max-width: 95vw;
   }
   
   @media (max-width: 480px) {
     max-height: 95vh;
+    max-width: 98vw;
   }
 `
 
@@ -96,6 +93,29 @@ const ProjectImage = styled.div<{ $image?: string }>`
   background: ${props => props.$image ? `url(${props.$image})` : 'var(--card-background)'};
   background-size: cover;
   background-position: center;
+`
+
+const VideoContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 200px;
+  }
 `
 
 const ProjectContent = styled.div`
@@ -196,12 +216,22 @@ const MarkdownContent = styled.div`
 interface ProjectModalProps {
   project: ContentItem | null
   onClose: () => void
+  clickPosition?: { x: number; y: number }
 }
 
-export function ProjectModal({ project, onClose }: ProjectModalProps) {
+export function ProjectModal({ project, onClose, clickPosition }: ProjectModalProps) {
   if (!project) return null
 
-  // Prevent body scroll when modal is open
+  // Extract YouTube video ID from URL
+  const getYouTubeEmbedUrl = (url: string) => {
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/)
+    if (videoIdMatch && videoIdMatch[1]) {
+      return `https://www.youtube.com/embed/${videoIdMatch[1]}?rel=0&modestbranding=1`
+    }
+    return null
+  }
+
+  // Just prevent body scroll when modal is open - no position locking
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {
@@ -224,6 +254,8 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         }}
       >
         <Modal
+          $clickX={clickPosition?.x}
+          $clickY={clickPosition?.y}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -233,7 +265,16 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <IoClose />
           </CloseButton>
           
-          {project.image && (
+          {project.youtube ? (
+            <VideoContainer>
+              <iframe
+                src={getYouTubeEmbedUrl(project.youtube) || ''}
+                title={`${project.title} - Video Demo`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </VideoContainer>
+          ) : project.image && (
             <ProjectImage $image={project.image} />
           )}
           

@@ -4,6 +4,8 @@ import matter from 'gray-matter'
 import type { ContentItem } from './mdx'
 
 const projectFiles = [
+  'knowledge-agent.md',
+  'multimodal-gaming-controller.md',
   'ai-stock-prediction.md',
   'xv6-system-call-tracer.md',
   'deal-or-no-deal.md',

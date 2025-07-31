@@ -7,6 +7,7 @@ export interface ContentItem {
   tags: string[]
   slug: string
   content: string
+  youtube?: string
 }
 
 export interface ContentType {
