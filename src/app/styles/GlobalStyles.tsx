@@ -23,7 +23,7 @@ export const GlobalStyles = createGlobalStyle`
     max-width: 100vw;
     min-height: 100vh;
     overflow-x: hidden;
-    background: var(--background);
+    background: #000; /* Force black background */
     color: var(--foreground);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;

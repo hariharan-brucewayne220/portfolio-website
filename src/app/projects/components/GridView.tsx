@@ -9,6 +9,15 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
 `
 
 const ProjectCard = styled(motion.div)`
@@ -21,6 +30,14 @@ const ProjectCard = styled(motion.div)`
   &:hover {
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    border-radius: 8px;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
   }
 `
 
@@ -40,23 +57,36 @@ const ProjectImage = styled.div<{ $image?: string }>`
 
 const ProjectContent = styled.div`
   padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `
 
 const ProjectDate = styled.div`
-  color: var(--muted);
+  color: #ffffff;
+  font-weight: 500;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 `
 
 const ProjectTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
   margin-bottom: 1rem;
   color: var(--foreground);
+  line-height: 1.3;
 `
 
 const ProjectDescription = styled.p`
-  color: var(--muted);
+  color: #ffffff;
+  font-weight: 500;
   margin-bottom: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  line-height: 1.5;
 `
 
 const TagsContainer = styled.div`

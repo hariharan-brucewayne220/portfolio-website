@@ -58,7 +58,8 @@ const Institution = styled.div`
 `
 
 const ProjectDate = styled.span`
-  color: var(--muted);
+  color: #ffffff;
+  font-weight: 500;
   font-size: 0.9rem;
   margin-left: 0.5rem;
 `
@@ -70,7 +71,8 @@ const ProjectTitle = styled.h3`
 `
 
 const ProjectDescription = styled.p`
-  color: var(--muted);
+  color: #ffffff;
+  font-weight: 500;
   margin: 0.5rem 0 1rem;
   line-height: 1.6;
 `

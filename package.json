@@ -15,7 +15,7 @@
     "@next/mdx": "^14.1.0",
     "@radix-ui/react-dialog": "^1.1.6",
     "cmdk": "^0.2.1",
-    "framer-motion": "^11.0.8",
+    "framer-motion": "^11.18.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.344.0",
     "next": "^14.1.0",
@@ -24,13 +24,16 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
-    "styled-components": "^6.1.8"
+    "react-type-animation": "^3.2.0",
+    "styled-components": "^6.1.8",
+    "three": "^0.178.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "@types/styled-components": "^5.1.34",
+    "@types/three": "^0.178.1",
     "raw-loader": "^4.0.2",
     "typescript": "^5.3.3"
   }

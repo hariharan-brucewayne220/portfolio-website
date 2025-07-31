@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { BsGrid, BsListUl } from 'react-icons/bs'
 import type { ContentItem } from '../../lib/mdx'
 import { ProjectModal } from './ProjectModal'
 
+// --- Styled Components ---
 const ProjectsContainer = styled.div`
   min-height: 100vh;
   padding: 8rem 2rem 2rem;
@@ -16,6 +17,7 @@ const ProjectsContainer = styled.div`
 
 const Header = styled.div`
   margin-bottom: 4rem;
+  text-align: center;
 `
 
 const Title = styled.h1`
@@ -27,10 +29,12 @@ const Title = styled.h1`
 `
 
 const Description = styled.p`
-  color: var(--muted);
+  color: #ffffff;
+  font-weight: 500;
   font-size: 1.2rem;
   max-width: 800px;
   line-height: 1.6;
+  margin: 0 auto;
 `
 
 const Controls = styled.div`
@@ -49,8 +53,6 @@ const ViewToggle = styled.div`
   background: rgba(255, 255, 255, 0.05);
   padding: 0.25rem;
   border-radius: 8px;
-  position: absolute;
-  right: 0;
 `
 
 const ViewButton = styled.button<{ $active: boolean }>`
@@ -64,15 +66,10 @@ const ViewButton = styled.button<{ $active: boolean }>`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-
   &:hover {
     background: ${props => props.$active ? 'var(--primary)' : 'rgba(255, 255, 255, 0.1)'};
   }
-
-  svg {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
+  svg { width: 1.2rem; height: 1.2rem; }
 `
 
 const FilterTabs = styled.div`
@@ -92,7 +89,6 @@ const FilterTab = styled.button<{ $active: boolean }>`
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-
   &:hover {
     background: ${props => props.$active ? 'var(--primary)' : 'rgba(255, 255, 255, 0.1)'};
   }
@@ -101,9 +97,6 @@ const FilterTab = styled.button<{ $active: boolean }>`
 const TimelineContainer = styled.div`
   position: relative;
   padding: 2rem 0;
-  min-height: calc(100vh - 400px);
-  margin-bottom: 4rem;
-
   &::before {
     content: '';
     position: absolute;
@@ -116,48 +109,39 @@ const TimelineContainer = styled.div`
   }
 `
 
-const TimelineScroll = styled(motion.div)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 50vh;
-  background: var(--primary);
-  transform-origin: top;
-  z-index: 1;
-`
-
 const TimelineProject = styled(motion.div)<{ $isLeft: boolean }>`
   width: calc(50% - 2rem);
   margin: ${props => props.$isLeft ? '0 auto 4rem 0' : '0 0 4rem auto'};
   position: relative;
-
-  &::before {
+  &::before, &::after {
     content: '';
     position: absolute;
+    background: var(--primary);
+    z-index: 2;
+  }
+  &::before {
     top: 1.5rem;
     ${props => props.$isLeft ? 'right: -2.5rem' : 'left: -2.5rem'};
     width: 1rem;
     height: 1rem;
-    background: var(--primary);
     border-radius: 50%;
-    z-index: 2;
   }
-
   &::after {
-    content: '';
-    position: absolute;
     top: 1.875rem;
     ${props => props.$isLeft ? 'right: -1.5rem' : 'left: -1.5rem'};
     width: 1rem;
     height: 2px;
-    background: var(--primary);
-    z-index: 2;
   }
 `
 
-const ProjectCard = styled(motion.div)`
+const ProjectGrid = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+`
+
+const ProjectCard = styled.div`
   background: rgba(17, 17, 17, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -165,19 +149,20 @@ const ProjectCard = styled(motion.div)`
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
-
+  
   &:hover {
     transform: translateY(-4px);
     border-color: var(--primary);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
-`
-
-const ProjectGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  padding: 1rem 0;
+  
+  @media (max-width: 768px) {
+    border-radius: 8px;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
 `
 
 const ProjectImage = styled.div<{ $image?: string }>`
@@ -190,33 +175,30 @@ const ProjectImage = styled.div<{ $image?: string }>`
 
 const ProjectInfo = styled.div`
   padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `
-
 const ProjectTitle = styled.h3`
   margin: 0;
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 3vw, 1.25rem);
   color: var(--foreground);
+  line-height: 1.3;
 `
-
-const ProjectMeta = styled.div`
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--muted);
-`
-
+const ProjectMeta = styled.div` margin-top: 0.5rem; font-size: 0.875rem; color: #ffffff; font-weight: 500; `
 const ProjectDescription = styled.p`
   margin: 1rem 0;
-  color: var(--muted);
-  font-size: 0.875rem;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: clamp(0.8rem, 2.2vw, 0.875rem);
   line-height: 1.5;
 `
-
-const TagsContainer = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-`
-
+const TagsContainer = styled.div` display: flex; gap: 0.5rem; flex-wrap: wrap; `
 const Tag = styled.span`
   background: var(--primary);
   color: var(--background);
@@ -224,62 +206,40 @@ const Tag = styled.span`
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: lowercase;
 `
 
-interface ProjectsClientProps {
-  projects: ContentItem[]
-}
+// --- Reusable Project Card Component ---
+const ProjectCardContent = ({ project, onSelect }: { project: ContentItem, onSelect: () => void }) => (
+  <ProjectCard onClick={onSelect}>
+    {project.image && <ProjectImage $image={project.image} />}
+    <ProjectInfo>
+      <ProjectTitle>{project.title || 'Untitled Project'}</ProjectTitle>
+      <ProjectMeta>
+        {project.institution && `${project.institution} • `}
+        {project.date && new Date(project.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+      </ProjectMeta>
+      <ProjectDescription>{project.description || 'No description available.'}</ProjectDescription>
+      {project.tags && project.tags.length > 0 && (
+        <TagsContainer>
+          {project.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
+        </TagsContainer>
+      )}
+    </ProjectInfo>
+  </ProjectCard>
+);
 
-export default function ProjectsClient({ projects }: ProjectsClientProps) {
+// --- Main Client Component ---
+export default function ProjectsClient({ projects }: { projects: ContentItem[] }) {
   const [filter, setFilter] = useState<'all' | 'software' | 'ai'>('all')
   const [view, setView] = useState<'grid' | 'timeline'>('timeline')
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [selectedProject, setSelectedProject] = useState<ContentItem | null>(null)
 
-  // Add scroll handler
-  React.useEffect(() => {
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
-      const scrollTop = window.scrollY
-      const scrollPercent = (scrollTop / (documentHeight - windowHeight))
-      setScrollProgress(scrollPercent)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const filteredProjects = projects.filter(project => {
-    if (filter === 'all') return true
-    return project.tags.includes(filter.toLowerCase())
-  })
-
-  const ProjectContent = ({ project }: { project: ContentItem }) => (
-    <ProjectCard onClick={() => setSelectedProject(project)}>
-      {project.image && (
-        <ProjectImage $image={project.image} />
-      )}
-      <ProjectInfo>
-        <ProjectTitle>{project.title}</ProjectTitle>
-        <ProjectMeta>
-          {project.institution && `${project.institution} • `}
-          {new Date(project.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-          })}
-        </ProjectMeta>
-        <ProjectDescription>{project.description}</ProjectDescription>
-        <TagsContainer>
-          {project.tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </TagsContainer>
-      </ProjectInfo>
-    </ProjectCard>
-  )
+  const filteredProjects = React.useMemo(() => 
+    projects.filter(project => {
+      if (filter === 'all') return true
+      // Safely check if tags exist and include the filter
+      return project.tags?.map(t => t.toLowerCase()).includes(filter.toLowerCase()) ?? false
+    }), [projects, filter])
 
   return (
     <ProjectsContainer>
@@ -293,78 +253,51 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
 
       <Controls>
         <FilterTabs>
-          <FilterTab 
-            $active={filter === 'all'} 
-            onClick={() => setFilter('all')}
-          >
-            All
-          </FilterTab>
-          <FilterTab 
-            $active={filter === 'software'} 
-            onClick={() => setFilter('software')}
-          >
-            Software
-          </FilterTab>
-          <FilterTab 
-            $active={filter === 'ai'} 
-            onClick={() => setFilter('ai')}
-          >
-            AI
-          </FilterTab>
+          <FilterTab $active={filter === 'all'} onClick={() => setFilter('all')}>All</FilterTab>
+          <FilterTab $active={filter === 'software'} onClick={() => setFilter('software')}>Software</FilterTab>
+          <FilterTab $active={filter === 'ai'} onClick={() => setFilter('ai')}>AI</FilterTab>
         </FilterTabs>
-
         <ViewToggle>
-          <ViewButton
-            $active={view === 'grid'}
-            onClick={() => setView('grid')}
-            title="Grid View"
-          >
-            <BsGrid />
-          </ViewButton>
-          <ViewButton
-            $active={view === 'timeline'}
-            onClick={() => setView('timeline')}
-            title="Timeline View"
-          >
-            <BsListUl />
-          </ViewButton>
+          <ViewButton $active={view === 'grid'} onClick={() => setView('grid')} title="Grid View"><BsGrid /></ViewButton>
+          <ViewButton $active={view === 'timeline'} onClick={() => setView('timeline')} title="Timeline View"><BsListUl /></ViewButton>
         </ViewToggle>
       </Controls>
 
-      {view === 'timeline' ? (
-        <TimelineContainer>
-          <TimelineScroll
-            style={{
-              scaleY: scrollProgress,
-              opacity: scrollProgress > 0 ? 1 : 0
-            }}
-          />
-          {filteredProjects.map((project, index) => (
-            <TimelineProject
-              key={project.slug}
-              $isLeft={index % 2 === 0}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <ProjectContent project={project} />
-            </TimelineProject>
-          ))}
-        </TimelineContainer>
-      ) : (
-        <ProjectGrid>
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <ProjectContent project={project} />
-            </motion.div>
-          ))}
-        </ProjectGrid>
-      )}
+      <AnimatePresence mode="wait">
+        {view === 'timeline' ? (
+          <TimelineContainer key="timeline">
+            {filteredProjects.map((project, index) => (
+              <TimelineProject
+                key={project.slug}
+                $isLeft={index % 2 === 0}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <ProjectCardContent project={project} onSelect={() => setSelectedProject(project)} />
+              </TimelineProject>
+            ))}
+          </TimelineContainer>
+        ) : (
+          <ProjectGrid
+            key="grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                key={project.slug}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <ProjectCardContent project={project} onSelect={() => setSelectedProject(project)} />
+              </motion.div>
+            ))}
+          </ProjectGrid>
+        )}
+      </AnimatePresence>
 
       <ProjectModal 
         project={selectedProject} 
@@ -372,4 +305,4 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
       />
     </ProjectsContainer>
   )
-} 
+}

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoClose } from 'react-icons/io5'
@@ -11,15 +11,23 @@ const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
-  z-index: 1000;
+  z-index: 1002;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+  }
 `
 
 const Modal = styled(motion.div)`
@@ -28,9 +36,18 @@ const Modal = styled(motion.div)`
   border-radius: 12px;
   width: 100%;
   max-width: 800px;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-y: auto;
   position: relative;
+  
+  @media (max-width: 768px) {
+    max-height: 90vh;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    max-height: 95vh;
+  }
 `
 
 const CloseButton = styled.button`
@@ -59,6 +76,18 @@ const CloseButton = styled.button`
     width: 1.5rem;
     height: 1.5rem;
   }
+  
+  @media (max-width: 768px) {
+    width: 3rem;
+    height: 3rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
 `
 
 const ProjectImage = styled.div<{ $image?: string }>`
@@ -71,6 +100,14 @@ const ProjectImage = styled.div<{ $image?: string }>`
 
 const ProjectContent = styled.div`
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `
 
 const ProjectHeader = styled.div`
@@ -78,23 +115,30 @@ const ProjectHeader = styled.div`
 `
 
 const ProjectTitle = styled.h2`
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin-bottom: 0.5rem;
   background: linear-gradient(to right, var(--foreground), var(--primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  line-height: 1.2;
 `
 
 const ProjectMeta = styled.div`
-  color: var(--muted);
-  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
 `
 
 const ProjectDescription = styled.div`
-  color: var(--muted);
-  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: clamp(1rem, 2.8vw, 1.1rem);
   line-height: 1.8;
   margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+  }
 `
 
 const TagsContainer = styled.div`
@@ -115,14 +159,16 @@ const Tag = styled.span`
 `
 
 const MarkdownContent = styled.div`
-  color: var(--muted);
-  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: clamp(1rem, 2.8vw, 1.1rem);
   line-height: 1.8;
   margin: 2rem 0;
 
   h1, h2, h3 {
     color: var(--foreground);
     margin: 1.5rem 0 1rem;
+    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
   }
 
   ul, ol {
@@ -137,6 +183,14 @@ const MarkdownContent = styled.div`
   p {
     margin: 1rem 0;
   }
+  
+  @media (max-width: 768px) {
+    margin: 1.5rem 0;
+    
+    ul, ol {
+      padding-left: 1rem;
+    }
+  }
 `
 
 interface ProjectModalProps {
@@ -147,13 +201,27 @@ interface ProjectModalProps {
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   if (!project) return null
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
+  
+  
   return (
     <AnimatePresence>
       <Overlay
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
+        onClick={(e) => {
+          // Only close if clicking directly on the overlay, not the modal content
+          if (e.target === e.currentTarget) {
+            onClose()
+          }
+        }}
       >
         <Modal
           initial={{ scale: 0.9, opacity: 0 }}

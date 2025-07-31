@@ -2,7 +2,7 @@
 title: 'Deal or No Deal Game Optimizer'
 description: 'Automated tracking system for arcade game optimization using computer vision and OCR technology.'
 date: '2019-12'
-tags: ['Computer Vision', 'Python','OpenCV']
+tags: [Computer Vision, Python, OpenCV]
 ---
 
 # Deal or No Deal Game Optimizer

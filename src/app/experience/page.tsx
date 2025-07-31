@@ -8,13 +8,15 @@ export const dynamic = 'force-static'
 
 const ExperienceContainer = styled.div`
   min-height: 100vh;
-  padding: 8rem 2rem 2rem;
+  padding: 7rem 2rem 2rem; /* Adjusted padding-top for navbar */
   max-width: 1200px;
   margin: 0 auto;
 `
 
 const Header = styled.div`
   margin-bottom: 4rem;
+  position: relative;
+  z-index: 50;
 `
 
 const Title = styled.h1`
@@ -33,15 +35,18 @@ const Description = styled.p`
 `
 
 const ExperienceCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 50;
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.85);
     border-color: var(--primary);
   }
 `
@@ -83,8 +88,9 @@ const Achievements = styled.ul`
 `
 
 const Achievement = styled.li`
-  color: var(--muted);
+  color: #ffffff;
   font-size: 1rem;
+  font-weight: 500;
   line-height: 1.6;
   margin-bottom: 0.75rem;
   padding-left: 1.5rem;
