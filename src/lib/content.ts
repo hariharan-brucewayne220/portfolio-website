@@ -4,6 +4,8 @@ import matter from 'gray-matter'
 import type { ContentItem } from './mdx'
 
 const projectFiles = [
+  'macrodash.md',
+  'llm-red-team.md',
   'knowledge-agent.md',
   'multimodal-gaming-controller.md',
   'ai-stock-prediction.md',

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import Typewriter from './components/Typewriter'
@@ -134,14 +135,13 @@ const ListItem = styled.li`
   }
 `
 
-const ProfileImage = styled.div`
+const ProfileImageContainer = styled.div`
   width: 100%;
   height: 500px;
-  background-image: url('/profile.jpg');
-  background-size: cover;
-  background-position: center;
+  position: relative;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
 `
 
 const LinksContainer = styled(motion.div)`
@@ -175,7 +175,7 @@ const itemVariants = {
 export default function HomePage() {
   const aboutText1 = `As a computer science student and a full stack developer with over 3 years of work experience, I have honed my expertise in building scalable and efficient software solutions. My skill set includes proficiency in .NET, SQL, JavaScript, React, MongoDB, and Node.js.`;
   const aboutText2 = `As a Graduate student I am excited to deepen my understanding of emerging technologies, including cloud computing and artificial intelligence, while further refining my development skills. I'm driven by the challenge of building next-generation software solutions that integrate both traditional development practices and cutting-edge AI capabilities.`;
-  const skills = ['JavaScript/TypeScript', 'React/Next.js', 'Node.js', '.NET Core', 'Python', 'SQL/MongoDB', 'Machine Learning', 'Cloud Computing'];
+  const skills = ['Python', 'TypeScript', 'React/Next.js', 'Django/Flask/FastAPI', 'PostgreSQL', 'LLMs (GPT-4, Gemini, Claude)', 'Machine Learning/NLP', 'Data Visualization'];
 
   return (
     <Container variants={containerVariants} initial="hidden" animate="visible">
@@ -227,7 +227,16 @@ export default function HomePage() {
         </LinksContainer>
       </ContentSection>
       <ImageSection variants={itemVariants}>
-        <ProfileImage />
+        <ProfileImageContainer>
+          <Image
+            src="/profile.jpeg"
+            alt="Hariharan"
+            fill
+            sizes="(max-width: 1024px) 100vw, 400px"
+            style={{ objectFit: 'cover' }}
+            priority
+          />
+        </ProfileImageContainer>
       </ImageSection>
     </Container>
   )

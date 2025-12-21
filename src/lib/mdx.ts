@@ -8,6 +8,9 @@ export interface ContentItem {
   slug: string
   content: string
   youtube?: string
+  github?: string
+  liveUrl?: string
+  featured?: boolean
 }
 
 export interface ContentType {

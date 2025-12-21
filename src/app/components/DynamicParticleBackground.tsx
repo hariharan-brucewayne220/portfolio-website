@@ -41,6 +41,8 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
       eventHorizonRadius: number;
       photonSphereRadius: number;
       accretionDiskRadius: number;
+      depthLayer: number; // 0 = far background, 1 = mid, 2 = foreground
+      parallaxSpeed: number; // Multiplier for parallax effect
     }>;
     particleGalaxyMap: Int32Array;
     particleOrbitalData: Array<{
@@ -51,11 +53,22 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
       armIndex: number;
       isInPhotonSphere: boolean;
       lensingStrength: number;
+      depthLayer: number;
+    }>;
+    constellations: Array<{
+      stars: Array<{ x: number; y: number; brightness: number }>;
+      connections: Array<{ from: number; to: number }>;
+      name: string;
+      centerX: number;
+      centerY: number;
+      active: boolean;
     }>;
   } | null>(null);
   
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const zIndex = 1; // Fixed background level
   
   // Get background gradient based on current page
@@ -74,34 +87,62 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
 
   // Responsive particle count based on device capabilities
   const getParticleCount = () => {
-    if (typeof window === 'undefined') return 2000;
+    if (typeof window === 'undefined') return 1000;
     const width = window.innerWidth;
     const isMobile = width <= 768;
     const isLowEnd = navigator.hardwareConcurrency <= 4;
-    
-    if (isMobile && isLowEnd) return 500;  // Low-end mobile
-    if (isMobile) return 800;              // Mobile
-    if (width <= 1024) return 1200;       // Tablet
-    return 2000;                           // Desktop
+
+    if (isMobile && isLowEnd) return 300;  // Low-end mobile
+    if (isMobile) return 500;              // Mobile
+    if (width <= 1024) return 800;         // Tablet
+    return 1200;                           // Desktop
   };
   
   const particleCount = getParticleCount();
 
   // Show particles only after intro is complete
   useEffect(() => {
-    console.log('DynamicParticleBackground - isIntroComplete:', isIntroComplete);
     if (isIntroComplete) {
-      console.log('Setting particles visible');
       setIsVisible(true);
     } else {
       // If intro hasn't been played in a while, show particles anyway
       const timer = setTimeout(() => {
-        console.log('Fallback: showing particles after timeout');
         setIsVisible(true);
       }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isIntroComplete]);
+
+  // Parallax scroll tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      // Detect which section is being hovered for constellation effects
+      const elements = document.elementsFromPoint(event.clientX, event.clientY);
+      const section = elements.find(el => 
+        el.tagName === 'SECTION' || 
+        el.classList.contains('section') ||
+        el.id.includes('section')
+      );
+      
+      if (section && section.id) {
+        setHoveredSection(section.id);
+      } else {
+        setHoveredSection(null);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   // Mouse tracking with click explosions
   useEffect(() => {
@@ -136,9 +177,9 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
     };
   }, []);
 
-  // COSMIC Galaxy formation with NEBULA BACKGROUND
+  // COSMIC Galaxy formation with NEBULA BACKGROUND (optimized)
   const createGalaxySystem = useCallback((page: string) => {
-    const galaxyCount = page === '/' ? 2 : page === '/projects' ? 3 : 1;
+    const galaxyCount = 1; // Reduced from 2-3 to 1 for better performance
     const galaxies = [];
     const particleOrbitalData = [];
     
@@ -176,10 +217,14 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
       const photonSphereRadius = eventHorizonRadius * 1.5; // Where light orbits
       const accretionDiskRadius = eventHorizonRadius * 8; // Bright accretion disk
       
+      // Assign depth layers for parallax effect
+      const depthLayer = g % 3; // 0, 1, 2 for different depths
+      const parallaxSpeed = depthLayer === 0 ? 0.2 : depthLayer === 1 ? 0.5 : 1.0; // Far, mid, near
+      
       galaxies.push({
         centerX,
         centerY,
-        centerZ,
+        centerZ: centerZ + (depthLayer * 100), // Separate Z levels
         radius,
         armCount,
         rotation: Math.random() * Math.PI * 2,
@@ -189,12 +234,14 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
         colorTheme,
         eventHorizonRadius,
         photonSphereRadius,
-        accretionDiskRadius
+        accretionDiskRadius,
+        depthLayer,
+        parallaxSpeed
       });
     }
     
     // Create stable orbital data for galaxy particles only (background handled separately)
-    const backgroundParticles = Math.floor(particleCount * 0.3);
+    const backgroundParticles = Math.floor(particleCount * 0.4);
     const galaxyParticles = particleCount - backgroundParticles;
     const particleGalaxyMap = new Int32Array(galaxyParticles);
     
@@ -234,11 +281,70 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
         orbitalSpeed,
         armIndex,
         isInPhotonSphere,
-        lensingStrength
+        lensingStrength,
+        depthLayer: galaxy.depthLayer
       });
     }
     
-    return { galaxies, particleGalaxyMap, particleOrbitalData };
+    // Create constellation patterns - positioned within camera view
+    const constellations = [
+      {
+        name: 'Orion',
+        centerX: -200,
+        centerY: -100,
+        stars: [
+          { x: -250, y: -150, brightness: 1.0 },
+          { x: -200, y: -80, brightness: 0.8 },
+          { x: -150, y: -120, brightness: 0.9 },
+          { x: -220, y: -40, brightness: 0.7 },
+          { x: -180, y: -160, brightness: 0.6 },
+          { x: -140, y: -70, brightness: 0.8 },
+          { x: -170, y: -90, brightness: 0.5 }
+        ],
+        connections: [
+          { from: 0, to: 1 }, { from: 1, to: 2 }, { from: 2, to: 5 },
+          { from: 1, to: 3 }, { from: 0, to: 4 }, { from: 4, to: 6 }, { from: 6, to: 5 }
+        ],
+        active: false
+      },
+      {
+        name: 'Ursa Major',
+        centerX: 200,
+        centerY: 150,
+        stars: [
+          { x: 150, y: 100, brightness: 0.9 },
+          { x: 180, y: 120, brightness: 0.8 },
+          { x: 210, y: 110, brightness: 0.7 },
+          { x: 240, y: 130, brightness: 0.8 },
+          { x: 230, y: 170, brightness: 0.6 },
+          { x: 200, y: 180, brightness: 0.7 },
+          { x: 170, y: 160, brightness: 0.5 }
+        ],
+        connections: [
+          { from: 0, to: 1 }, { from: 1, to: 2 }, { from: 2, to: 3 },
+          { from: 3, to: 4 }, { from: 4, to: 5 }, { from: 5, to: 6 }, { from: 6, to: 0 }
+        ],
+        active: false
+      },
+      {
+        name: 'Cassiopeia',
+        centerX: 0,
+        centerY: -200,
+        stars: [
+          { x: -50, y: -250, brightness: 0.8 },
+          { x: -20, y: -220, brightness: 0.9 },
+          { x: 10, y: -200, brightness: 1.0 },
+          { x: 40, y: -180, brightness: 0.7 },
+          { x: 70, y: -210, brightness: 0.6 }
+        ],
+        connections: [
+          { from: 0, to: 1 }, { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 }
+        ],
+        active: false
+      }
+    ];
+
+    return { galaxies, particleGalaxyMap, particleOrbitalData, constellations };
   }, [particleCount]);
 
   // Calculate spiral arm position for a particle - ULTRA TIGHT FOR MAXIMUM DENSITY
@@ -615,19 +721,16 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
     transitioningRef.current = true;
     targetFormationRef.current = newFormation;
 
-    console.log(`Transitioning particles to: ${newFormation.name}`);
   }, []);
 
   // Initialize Three.js scene
   useEffect(() => {
-    console.log('Three.js initialization - isVisible:', isVisible, 'mountRef:', !!mountRef.current);
     if (!isVisible || !mountRef.current) return;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.z = 300;
     
-    console.log('Camera and scene created at z=300');
     
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -657,6 +760,27 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
     geometry.setAttribute('position', new THREE.BufferAttribute(initialFormation.positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(initialFormation.colors, 3));
 
+    // Create constellation lines geometry
+    const constellationGeometry = new THREE.BufferGeometry();
+    const maxLines = 50; // Maximum constellation lines
+    const linePositions = new Float32Array(maxLines * 6); // 2 points per line, 3 coords per point
+    const lineColors = new Float32Array(maxLines * 6);
+    
+    constellationGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    constellationGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+    
+    const constellationMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 1.0,
+      blending: THREE.AdditiveBlending,
+      linewidth: 2, // Thicker lines
+    });
+    
+    const constellationLines = new THREE.LineSegments(constellationGeometry, constellationMaterial);
+    constellationLines.name = 'constellationLines';
+    scene.add(constellationLines);
+
     // Responsive particle size
     const getParticleSize = () => {
       if (typeof window === 'undefined') return 3.5;
@@ -675,7 +799,6 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
       sizeAttenuation: false,
     });
     
-    console.log('Material created, particle count:', particleCount);
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
@@ -730,12 +853,23 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
       currentIndex: 0
     };
     
-    console.log('Particles and trails added to scene, starting animation');
 
-    // Animation loop
+    // Animation loop with frame limiting for performance
     let animationFrameId: number;
-    const animate = () => {
+    let lastTime = 0;
+    const targetFPS = 30; // Limit to 30fps for better performance
+    const frameInterval = 1000 / targetFPS;
+
+    const animate = (currentTime: number = 0) => {
       if (!particlesRef.current) return;
+
+      // Frame rate limiting
+      const deltaTime = currentTime - lastTime;
+      if (deltaTime < frameInterval) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      lastTime = currentTime - (deltaTime % frameInterval);
 
       const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
       const colors = particlesRef.current.geometry.attributes.color.array as Float32Array;
@@ -803,7 +937,7 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
           // Update orbital angle based on realistic speed
           orbitalData.orbitalAngle += orbitalData.orbitalSpeed;
           
-          // Calculate stable orbital position
+          // Calculate stable orbital position with PARALLAX SCROLLING
           const spiralArmOffset = (orbitalData.armIndex / galaxy.armCount) * Math.PI * 2;
           const spiralAngle = spiralArmOffset + (orbitalData.orbitalRadius / galaxy.radius) * Math.PI * 1.5;
           const totalAngle = orbitalData.orbitalAngle + spiralAngle + galaxy.rotation;
@@ -813,10 +947,14 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
           const armDeviation = Math.sin(i * 0.1) * armTightness;
           const densityVariation = Math.sin(orbitalData.orbitalRadius * 0.05) * 0.5;
           
-          let targetX = galaxy.centerX + Math.cos(totalAngle) * orbitalData.orbitalRadius + 
-                        Math.cos(totalAngle + Math.PI/2) * (armDeviation + densityVariation);
-          let targetY = galaxy.centerY + Math.sin(totalAngle) * orbitalData.orbitalRadius + 
-                        Math.sin(totalAngle + Math.PI/2) * (armDeviation + densityVariation);
+          // Apply parallax scrolling based on depth layer - more pronounced
+          const parallaxOffsetY = scrollY * galaxy.parallaxSpeed * 0.8; // More noticeable parallax
+          const depthScale = 1 - (galaxy.depthLayer * 0.2); // More size difference
+          
+          let targetX = (galaxy.centerX + Math.cos(totalAngle) * orbitalData.orbitalRadius + 
+                        Math.cos(totalAngle + Math.PI/2) * (armDeviation + densityVariation)) * depthScale;
+          let targetY = (galaxy.centerY + Math.sin(totalAngle) * orbitalData.orbitalRadius + 
+                        Math.sin(totalAngle + Math.PI/2) * (armDeviation + densityVariation) + parallaxOffsetY) * depthScale;
           let targetZ = galaxy.centerZ + Math.sin(i * 0.05) * 8;
           
           // VERY SUBTLE mouse influence (like dark matter)
@@ -935,6 +1073,64 @@ const DynamicParticleBackground: React.FC<DynamicParticleBackgroundProps> = ({ i
         
         trailHistoryRef.current.currentIndex++;
         trailSystemRef.current.geometry.attributes.position.needsUpdate = true;
+      }
+
+      // Update constellation lines based on hover state
+      if (galaxySystemRef.current?.constellations) {
+        const constellationLinesGeometry = scene.getObjectByName('constellationLines') as THREE.LineSegments;
+        if (constellationLinesGeometry) {
+          const linePositions = constellationLinesGeometry.geometry.attributes.position.array as Float32Array;
+          const lineColors = constellationLinesGeometry.geometry.attributes.color.array as Float32Array;
+          
+          let lineIndex = 0;
+          
+          galaxySystemRef.current.constellations.forEach((constellation, constIndex) => {
+            // Always show constellations for now to test - later make it hover-based
+            const isActive = true; // hoveredSection !== null || Math.sin(Date.now() * 0.001) > 0;
+            
+            if (isActive) {
+              constellation.connections.forEach((connection, connIndex) => {
+                if (lineIndex < 50) { // Max lines limit
+                  const star1 = constellation.stars[connection.from];
+                  const star2 = constellation.stars[connection.to];
+                  
+                  // Apply parallax to constellation positions
+                  const parallaxOffset = scrollY * 0.1;
+                  
+                  // Start point
+                  linePositions[lineIndex * 6] = star1.x;
+                  linePositions[lineIndex * 6 + 1] = star1.y + parallaxOffset;
+                  linePositions[lineIndex * 6 + 2] = 0; // Same Z as particles
+                  
+                  // End point  
+                  linePositions[lineIndex * 6 + 3] = star2.x;
+                  linePositions[lineIndex * 6 + 4] = star2.y + parallaxOffset;
+                  linePositions[lineIndex * 6 + 5] = 0;
+                  
+                  // Line colors (bright cyan-white)
+                  lineColors[lineIndex * 6] = 0.5;     // R - start point
+                  lineColors[lineIndex * 6 + 1] = 1.0; // G - start point  
+                  lineColors[lineIndex * 6 + 2] = 1.0; // B - start point
+                  lineColors[lineIndex * 6 + 3] = 0.5; // R - end point
+                  lineColors[lineIndex * 6 + 4] = 1.0; // G - end point
+                  lineColors[lineIndex * 6 + 5] = 1.0; // B - end point
+                  
+                  lineIndex++;
+                }
+              });
+            }
+          });
+          
+          
+          // Clear remaining lines
+          for (let i = lineIndex * 6; i < linePositions.length; i++) {
+            linePositions[i] = 0;
+            lineColors[i] = 0;
+          }
+          
+          constellationLinesGeometry.geometry.attributes.position.needsUpdate = true;
+          constellationLinesGeometry.geometry.attributes.color.needsUpdate = true;
+        }
       }
 
       particlesRef.current.geometry.attributes.position.needsUpdate = true;

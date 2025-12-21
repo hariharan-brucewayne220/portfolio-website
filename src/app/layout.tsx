@@ -1,14 +1,24 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { Inter } from 'next/font/google'
 import StyledComponentsRegistry from '../lib/registry'
 import { Providers } from './providers'
-import ParticleBackground from './components/ParticleBackground'
-import DynamicParticleBackground from './components/DynamicParticleBackground'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Navigation } from './components/Navigation'
 import { usePathname } from 'next/navigation'
+
+// Lazy load heavy Three.js components
+const ParticleBackground = dynamic(() => import('./components/ParticleBackground'), {
+  ssr: false,
+  loading: () => null
+})
+
+const DynamicParticleBackground = dynamic(() => import('./components/DynamicParticleBackground'), {
+  ssr: false,
+  loading: () => null
+})
 
 const inter = Inter({ subsets: ['latin'] })
 
