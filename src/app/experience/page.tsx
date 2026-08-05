@@ -111,6 +111,20 @@ const Achievement = styled.li`
 
 const experiences = [
   {
+    role: 'Founding Software Engineer',
+    company: 'CEART',
+    location: 'Remote',
+    duration: 'jun 2026 – present',
+    achievements: [
+      'Founding software engineer on CEARTscore, an AI-powered due-diligence and scoring platform for renewable energy developments.',
+      'Own features end to end across a Next.js/Supabase scoring dashboard and a Python event-sourced analysis worker running on Railway.',
+      'Built job control and crash recovery for the analysis pipeline: safe stop/terminate for long-running analyses, plus fixes for silent data-loss bugs in job reclaim and resume.',
+      'Drove SOC 2 readiness work: moved databases off public TCP proxies onto private networking, added environment-credential isolation guardrails to the worker, and designed a tiered secret-rotation plan.',
+      'Set up staging/production release isolation across both services, with main deploying to staging and a release branch to production, promoted by PR.',
+      'Hardened row-level security policies and optimized SECURITY DEFINER RPCs and SQL migrations, with every change shipped through AI-assisted review and CI.',
+    ],
+  },
+  {
     role: 'Founding Engineer',
     company: 'GeneGenius',
     location: 'Remote',
@@ -188,7 +202,7 @@ export default function ExperiencePage() {
           Where I&apos;ve worked
         </Title>
         <Description>
-          From backend systems at scale to founding-engineer work on an AI genomics platform.
+          From backend systems at scale to founding-engineer roles in AI due diligence and genomics.
         </Description>
       </Header>
 

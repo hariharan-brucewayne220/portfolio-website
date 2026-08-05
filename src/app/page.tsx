@@ -265,10 +265,11 @@ export default function HomePage() {
         <Title>Hariharan Loganathan.</Title>
         <Subtitle>I build AI systems that make it to production.</Subtitle>
         <Lede>
-          AI engineer and founding engineer at <strong>GeneGenius</strong>, an early-stage platform for
-          clinical genomic variant interpretation. Previously three years of backend engineering at{' '}
-          <strong>Zenoti</strong>, now finishing my MS in Computer Science at <strong>NYU</strong>. I work
-          on agentic LLM systems, retrieval pipelines, and the infrastructure that keeps them reliable.
+          Founding software engineer at <strong>CEART</strong>, an AI-powered due-diligence platform for
+          renewable energy developments, and founding engineer at <strong>GeneGenius</strong> (clinical
+          genomics AI). Three years of backend engineering at <strong>Zenoti</strong>, MS in Computer
+          Science from <strong>NYU</strong> ('26). I work on agentic LLM systems, retrieval pipelines,
+          and the infrastructure that keeps them reliable.
         </Lede>
         <CtaRow>
           <PrimaryCta href="/projects">
@@ -287,9 +288,10 @@ export default function HomePage() {
             <Paragraph>
               My path runs from high-throughput payroll microservices serving <strong>1,000+ globally
               distributed nodes</strong> at Zenoti, through GenAI security evaluation at Block Convey, to
-              building an AI platform for genomics as a founding engineer. Along the way I picked up a
-              habit: treating LLM features like production software, with retrieval quality, latency
-              budgets, observability, and failure modes all accounted for.
+              founding-engineer roles at CEART (renewable-energy due diligence) and GeneGenius (clinical
+              genomics). Along the way I picked up a habit: treating LLM features like production
+              software, with retrieval quality, latency budgets, observability, and failure modes all
+              accounted for.
             </Paragraph>
             <Paragraph>
               Lately that means multimodal voice+vision agents on Gemini Live, hybrid-retrieval RAG with

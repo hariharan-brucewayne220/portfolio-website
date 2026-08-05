@@ -9,7 +9,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mon
 export const metadata: Metadata = {
   title: 'Hariharan Loganathan | AI Engineer',
   description:
-    'AI Engineer and Founding Engineer at GeneGenius. MSCS @ NYU. I build agentic LLM systems, RAG pipelines, and production backend infrastructure.',
+    'AI Engineer. Founding Software Engineer at CEART and Founding Engineer at GeneGenius. MSCS @ NYU. I build agentic LLM systems, RAG pipelines, and production backend infrastructure.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
