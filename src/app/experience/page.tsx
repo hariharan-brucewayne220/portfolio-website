@@ -113,7 +113,7 @@ const experiences = [
   {
     role: 'Founding Software Engineer',
     company: 'CEART',
-    location: 'Remote',
+    location: 'New York, NY',
     duration: 'jun 2026 – present',
     achievements: [
       'Founding software engineer on CEARTscore, an AI-powered due-diligence and scoring platform for renewable energy developments.',
@@ -127,7 +127,7 @@ const experiences = [
   {
     role: 'Founding Engineer',
     company: 'GeneGenius',
-    location: 'Remote',
+    location: 'New York, NY',
     duration: '2025 – present',
     achievements: [
       'Founding engineer at an early-stage AI platform for clinical genomic variant interpretation, spanning engineering, product strategy, and business development.',
