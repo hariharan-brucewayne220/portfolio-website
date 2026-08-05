@@ -4,7 +4,6 @@ date: 2025-06-15
 institution: Personal Project
 description: Real-time multimodal gaming controller using MediaPipe for hand tracking, custom MLP classifier for gesture recognition, OpenAI Whisper and Vosk models for voice commands, and Groq API for ultra-low-latency LLM inference.
 tags: [AI, Gaming, Computer-Vision, Voice-Recognition, MediaPipe, Machine-Learning, RAG]
-image: /projects/gaming-controller.jpg
 youtube: https://www.youtube.com/watch?v=OiAthIF463w
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: MacroDash – Full-Stack Financial Analytics Dashboard
-date: 2025-09-01 to 2025-12-01
+date: 2025-12-15
 institution: Team Project
 description: A real-time financial analytics platform integrating 7+ external APIs to deliver stock market data, economic indicators, cryptocurrency tracking, and AI-powered insights.
 tags: [React, TypeScript, Django, PostgreSQL, Finance-AI, Full-Stack]

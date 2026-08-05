@@ -4,6 +4,11 @@ import matter from 'gray-matter'
 import type { ContentItem } from './mdx'
 
 const projectFiles = [
+  'revlens.md',
+  'city-witness.md',
+  'distributed-api-monitor.md',
+  'ai-financial-advisor.md',
+  'sentinel-mlops.md',
   'macrodash.md',
   'llm-red-team.md',
   'knowledge-agent.md',

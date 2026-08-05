@@ -4,7 +4,6 @@ date: 2025-06-01
 institution: Personal Project
 description: Zero-hallucination research system for PDFs and YouTube with 100% source attribution, built using FastAPI, ChromaDB, and OpenAI across 1,391 lines of production code.
 tags: [AI, Research, FastAPI, ChromaDB, OpenAI, Vector-Search, RAG]
-image: /projects/knowledge-agent.jpg
 ---
 
 # KnowledgeAgent – AI Research Assistant
