@@ -3,7 +3,7 @@ title: City Witness – Real-Time Voice+Vision AI Agent
 date: 2026-03-15
 institution: NYC Build With AI Hackathon, NYU Tandon
 description: Multimodal Gemini Live agent that sees NYC through your camera, narrates live, and grounds answers in real city data (311, restaurant inspections, crime stats) for that exact location.
-tags: [Python, FastAPI, Gemini-Live, Voice-AI, MCP, AI/ML]
+tags: [Python, FastAPI, Gemini-Live, Voice-AI, MCP, AI/ML, AI]
 github: https://github.com/hariharan-brucewayne220/city_pulse
 featured: true
 ---

@@ -3,21 +3,16 @@ import path from 'path'
 import matter from 'gray-matter'
 import type { ContentItem } from './mdx'
 
+// Kept deliberately short: a handful of projects that each show something the
+// CEART and Zenoti roles do not, rather than everything ever built. Cut entries
+// are recoverable from git history.
 const projectFiles = [
-  'revlens.md',
+  'rv-tsfm-bench.md',
+  'github-ecosystem-analytics.md',
+  'sentinel-agent.md',
   'city-witness.md',
-  'distributed-api-monitor.md',
-  'ai-financial-advisor.md',
-  'sentinel-mlops.md',
   'macrodash.md',
-  'llm-red-team.md',
-  'knowledge-agent.md',
   'multimodal-gaming-controller.md',
-  'ai-stock-prediction.md',
-  'xv6-system-call-tracer.md',
-  'deal-or-no-deal.md',
-  'ai-cancer-diagnosis.md',
-  'medical-ner.md',
 ]
 
 export function getContentByType(type: 'blog' | 'projects' | 'experience'): ContentItem[] {

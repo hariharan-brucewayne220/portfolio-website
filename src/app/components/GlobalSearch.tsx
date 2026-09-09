@@ -160,43 +160,52 @@ export function GlobalSearch() {
       type: 'page',
       icon: <Briefcase size={16} />
     },
+    // Keep in sync with projectFiles in src/lib/content.ts.
     {
-      id: 'ai-stock-prediction',
-      title: 'AI Stock Prediction',
-      description: 'Machine learning model for stock market prediction',
-      path: '/projects#ai-stock-prediction',
+      id: 'rv-tsfm-bench',
+      title: 'Time-Series Foundation Models vs HAR',
+      description: 'Realized-volatility benchmark of Chronos-Bolt and Granite TTM against HAR and GARCH',
+      path: '/projects#rv-tsfm-bench',
       type: 'project',
       icon: <FileText size={16} />
     },
     {
-      id: 'ai-cancer-diagnosis',
-      title: 'AI Cancer Diagnosis',
-      description: 'Medical AI system for cancer detection',
-      path: '/projects#ai-cancer-diagnosis',
+      id: 'github-ecosystem-analytics',
+      title: 'GitHub Developer Ecosystem Analytics',
+      description: 'Lambda-architecture platform on Spark, Kafka and Airflow predicting viral repositories',
+      path: '/projects#github-ecosystem-analytics',
       type: 'project',
       icon: <FileText size={16} />
     },
     {
-      id: 'xv6-system-call-tracer',
-      title: 'XV6 System Call Tracer',
-      description: 'Operating systems project with system call tracing',
-      path: '/projects#xv6-system-call-tracer',
+      id: 'sentinel-agent',
+      title: 'Sentinel – Autonomous Agent with On-Chain Guardrails',
+      description: 'LangGraph trading agent whose limits are enforced by a smart contract, not a prompt',
+      path: '/projects#sentinel-agent',
       type: 'project',
       icon: <FileText size={16} />
     },
     {
-      id: 'medical-ner',
-      title: 'Medical NER',
-      description: 'Named Entity Recognition for medical text processing',
-      path: '/projects#medical-ner',
+      id: 'city-witness',
+      title: 'City Witness',
+      description: 'Real-time voice and vision agent over NYC open data, built on Gemini Live',
+      path: '/projects#city-witness',
       type: 'project',
       icon: <FileText size={16} />
     },
     {
-      id: 'deal-or-no-deal',
-      title: 'Deal or No Deal',
-      description: 'Game implementation with decision theory',
-      path: '/projects#deal-or-no-deal',
+      id: 'macrodash',
+      title: 'MacroDash',
+      description: 'Macroeconomic and markets dashboard with scheduled LLM analyst agents',
+      path: '/projects#macrodash',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
+      id: 'multimodal-gaming-controller',
+      title: 'Multimodal Gaming Controller',
+      description: 'Hand-gesture and voice control for PC games using MediaPipe and offline speech',
+      path: '/projects#multimodal-gaming-controller',
       type: 'project',
       icon: <FileText size={16} />
     }
