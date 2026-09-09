@@ -3,16 +3,20 @@ import path from 'path'
 import matter from 'gray-matter'
 import type { ContentItem } from './mdx'
 
-// Kept deliberately short: a handful of projects that each show something the
-// CEART and Zenoti roles do not, rather than everything ever built. Cut entries
-// are recoverable from git history.
+// Substantial work only — the coursework-era entries were retired. Ordering is by
+// date in getContentByType, so this list is alphabetical for easy editing.
 const projectFiles = [
-  'rv-tsfm-bench.md',
-  'github-ecosystem-analytics.md',
-  'sentinel-agent.md',
+  'ai-financial-advisor.md',
   'city-witness.md',
+  'distributed-api-monitor.md',
+  'github-ecosystem-analytics.md',
+  'llm-red-team.md',
   'macrodash.md',
   'multimodal-gaming-controller.md',
+  'revlens.md',
+  'rv-tsfm-bench.md',
+  'sentinel-agent.md',
+  'sentinel-mlops.md',
 ]
 
 export function getContentByType(type: 'blog' | 'projects' | 'experience'): ContentItem[] {

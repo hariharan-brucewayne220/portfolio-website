@@ -202,6 +202,46 @@ export function GlobalSearch() {
       icon: <FileText size={16} />
     },
     {
+      id: 'revlens',
+      title: 'RevLens',
+      description: 'Multi-tenant sales call intelligence with a Whisper to GPT-4o event pipeline',
+      path: '/projects#revlens',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
+      id: 'ai-financial-advisor',
+      title: 'AI Financial Advisor',
+      description: 'Hybrid-retrieval RAG with LangGraph agents and PII redaction before indexing',
+      path: '/projects#ai-financial-advisor',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
+      id: 'sentinel-mlops',
+      title: 'Sentinel – End-to-End MLOps Pipeline',
+      description: 'Anomaly detection through MLflow tracking, Evidently drift monitoring and CI',
+      path: '/projects#sentinel-mlops',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
+      id: 'llm-red-team',
+      title: 'LLM Red Team Platform',
+      description: 'Adversarial assessment harness across five attack categories with live streaming',
+      path: '/projects#llm-red-team',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
+      id: 'distributed-api-monitor',
+      title: 'API Monitor',
+      description: 'Go health checker with Postgres history and locally hosted LLM insights',
+      path: '/projects#distributed-api-monitor',
+      type: 'project',
+      icon: <FileText size={16} />
+    },
+    {
       id: 'multimodal-gaming-controller',
       title: 'Multimodal Gaming Controller',
       description: 'Hand-gesture and voice control for PC games using MediaPipe and offline speech',
